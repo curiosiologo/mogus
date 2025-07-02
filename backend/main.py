@@ -3,8 +3,8 @@ from fastapi import FastAPI
 app = FastAPI()
 
 @app.get("/registar_impostor")
-def matar_ninja(nome: str):
-    return {"nome": nome} # id
+def matar_ninja(ninja: int):
+    return {"ninjas": ninja}
 
 @app.get("/matar_ninja")
 def matar_ninja(impostor: int, ninja: int):
