@@ -14,6 +14,7 @@ def script(script: str):
     
 script("PRAGMA foreign_keys = 1;")
 
+# FIXME: Isto não devia retornar um dicionário??
 def query(query: str, params: tuple[object] = []) -> list[tuple[object]] | None:
     try:
         cursor = database.cursor()

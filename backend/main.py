@@ -46,12 +46,16 @@ def completar_task(task: str, ninja: int):
         return {"erro": "ninja morto"}
 
 @app.get("/emergency_meeting_start")
-def emergency_meeting_start(type: str, ninja: int):
-    return {"type": type, "ninja": ninja}
+def emergency_meeting_start(report: bool, ninja: int):
+    database.query("UPDATE emeeting SET active=1,report=?,reporter=?", (1 if report else 0, ninja))
 
 @app.get("/emergency_meeting_end")
 def emergency_meeting_end():
-    return {"end": "ok"}
+    database.query("UPDATE emeeting SET active=0")
+
+@app.get("/emergency_meeting_on")
+def emergency_meeting_on() -> bool:
+    return bool(database.query("SELECT active FROM emeeting")[0][0])
 
 @app.get("/log")
 def log(index: int):
@@ -59,8 +63,4 @@ def log(index: int):
 
 @app.get("/info")
 def info():
-    return {"ninjas": [{"id": 0, "nome": "Bob", "impostor": True, "cooldown": False, "killed_by": 1, "tasks_completed": []}], "tasks": {"completed": 5, "total": 30}}
-
-@app.get("/emergency_meeting_on")
-def emergency_meeting_on() -> bool:
-    return bool(database.query("SELECT active FROM emeeting")[0][0])
+    return database.query("SELECT * FROM ninja")
