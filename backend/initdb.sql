@@ -30,10 +30,17 @@ CREATE TABLE log (
 	msg TEXT NOT NULL
 );
 
-CREATE TABLE events (
-	emergency_meeting INTEGER NOT NULL PRIMARY KEY
+-- Estado global da Emergency Meeting
+CREATE TABLE emeeting (
+	active INTEGER NOT NULL,
+	reporter INTEGER,
+	
+	-- Boolean: verdadeiro se reuinão foi chamada para reportar um cadaver
+	report INTEGER NOT NULL,
 	
 	--CHECK (impostor in (0, 1))
+	
+	FOREIGN KEY(reporter) REFERENCES ninja(id)
 );
 
-INSERT INTO events ( emergency_meeting ) VALUES ( 0 );
+INSERT INTO emeeting ( active, report ) VALUES ( 0, 0 );

@@ -52,4 +52,4 @@ def info():
 
 @app.get("/emergency_meeting_on")
 def emergency_meeting_on() -> bool:
-    return bool(database.query("SELECT emergency_meeting FROM events")[0][0])
+    return bool(database.query("SELECT active FROM emeeting")[0][0])
