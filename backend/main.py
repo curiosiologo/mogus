@@ -4,13 +4,14 @@ import os
 
 app = FastAPI()
 
-"""def createvalues():
-    database.script("INSERT INTO ninja VALUES (0, 0, 'Alice', NULL, 0), (1, 0, 'Bob', NULL, 0), (2, 1, 'Charlie', NULL, 1), (3, 0, 'Mateus', 2, 0);")
-    database.script("INSERT INTO task VALUES ('fios'), ('cham-cham'), ('copos');")
+def createvalues():
+    database.query("INSERT INTO ninja VALUES (0, 0, 'Alice', NULL, 0), (1, 0, 'Bob', NULL, 0), (2, 1, 'Charlie', NULL, 1), (3, 0, 'Mateus', 2, 0)")
+    database.query("INSERT INTO task VALUES ('fios'), ('cham-cham'), ('copos')")
+    database.query("INSERT INTO log VALUES (0, 'Boas'), (2, 'segunda'), (1, 'primeira')")
     print("creating values")
 
 if database.created:
-    createvalues()"""
+    createvalues()
 
 @app.get("/registar_impostor")
 def registar_impostor(ninja: int):
@@ -59,7 +60,9 @@ def emergency_meeting_on() -> bool:
 
 @app.get("/log")
 def log(index: int):
-    return {"log": log[index:]}
+    log = {"log": []}
+    log = [ i[1] for i in database.query("SELECT * FROM log") ]
+    return log[index:]
 
 @app.get("/info")
 def info():
