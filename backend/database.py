@@ -1,6 +1,8 @@
 import sqlite3
 
-database = sqlite3.connect("database.sqlite")
+database = sqlite3.connect(
+    "database.sqlite",
+    check_same_thread = False) # FIXME: Será que isto causa problemas...??
 
 def script(script: str):
     cursor = database.cursor()
@@ -12,9 +14,9 @@ def query(query: str, params: tuple[object] = []) -> list[tuple[object]] | None:
     try:
         cursor = database.cursor()
         cursor.execute(query, params)
-        return cur.fetchall()
+        return cursor.fetchall()
     except sqlite3.Error as e:
-        print(f"ERROR: Could not run query '{query}' because '{e.sqlite_errorname}'")
+        print(f"ERROR: Could not run query '{query}' because '{str(e)}'")
         return None
 
 def initdb():

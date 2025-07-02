@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+import database
 
 app = FastAPI()
 
@@ -30,5 +31,6 @@ def log(index: int):
 def info():
     return {"ninjas": [{"id": 0, "nome": "Bob", "impostor": True, "cooldown": False, "killed_by": 1, "tasks_completed": []}], "tasks": {"completed": 5, "total": 30}}
 
-def emergency_meeting_on():
-    return {"emergency_meeting_on": False}
+@app.get("/emergency_meeting_on")
+def emergency_meeting_on() -> bool:
+    return bool(database.query("SELECT emergency_meeting FROM events")[0][0])
