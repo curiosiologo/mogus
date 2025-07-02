@@ -4,35 +4,46 @@ import os
 
 app = FastAPI()
 
-#if not os.path.isfile("database.sqlite"):
-#    database.initdb()
-#    createvalues()
+"""def createvalues():
+    database.script("INSERT INTO ninja VALUES (0, 0, 'Alice', NULL, 0), (1, 0, 'Bob', NULL, 0), (2, 1, 'Charlie', NULL, 1), (3, 0, 'Mateus', 2, 0);")
+    database.script("INSERT INTO task VALUES ('fios'), ('cham-cham'), ('copos');")
+    print("creating values")
 
-#def createvalues():
-#    database.query("INSERT INTO ninja VALUES (1, 1, 'Alice', NULL, 0), (2, 0, 'Bob', NULL, 0), (3, 1, 'Charlie', NULL, 1), (4, 0, 'Mateus', 3, 0)")
-#    database.query("INSERT INTO task VALUES ('fios'), ('cham-cham'), ('copos')")
+if database.created:
+    createvalues()"""
 
 @app.get("/registar_impostor")
 def registar_impostor(ninja: int):
-    return database.query('UPDATE ninja SET impostor=1 WHERE id=?', (impostor,))
+    database.query('UPDATE ninja SET impostor=1 WHERE id=?', (ninja,))
+    return {"registar_impostor": "ok"}
 
 @app.get("/matar_ninja")
 def matar_ninja(impostor: int, ninja: int):
-    if database.query('SELECT impostor FROM ninja WHERE id=?', (impostor,)):
-        database.query('UPDATE ninja SET killed_by=? WHERE id=?', (impostor, ninja))
-        database.query('UPDATE ninja SET cooldown=1 WHERE id=?', (impostor,))
-        return {"impostor": impostor, "ninja": ninja}
-    else:
+    if not database.query('SELECT impostor FROM ninja WHERE id=?', (impostor,))[0][0]:
         return {"erro": "não é impostor"}
+    if database.query('SELECT cooldown FROM ninja WHERE id=?', (impostor,))[0][0]:
+        return {"erro": "on cooldown"}
+    if database.query('SELECT impostor FROM ninja WHERE id=?', (ninja,))[0][0]:
+        return {"erro": "não podes matar impostores"}
+    if database.query('SELECT killed_by FROM ninja WHERE id=?', (ninja,))[0][0]:
+        return {"erro": "ninja já morto"}
+    if database.query('SELECT killed_by FROM ninja WHERE id=?', (impostor,))[0][0]: # FIXME já morto... ejetado?
+        return {"erro": "impostor já morto"}
+    database.query('UPDATE ninja SET killed_by=? WHERE id=?', (impostor, ninja))
+    database.query('UPDATE ninja SET cooldown=1 WHERE id=?', (impostor,))
+    return {"impostor": impostor, "ninja": ninja}
 
 @app.get("/completar_task")
 def completar_task(task: str, ninja: int):
-    if database.query('SELECT impostor FROM ninja WHERE id=?', (ninja,)):
+    if database.query('SELECT impostor FROM ninja WHERE id=?', (ninja,))[0][0]:
         database.query('UPDATE ninja SET cooldown=0 WHERE id=?', (ninja,))
+        print(database.query('SELECT impostor FROM ninja WHERE id=?', (ninja,)))[0][0]
         return {"impostor": ninja}
-    else:
+    elif not database.query('SELECT killed_by FROM ninja WHERE id=?', (ninja,))[0][0]:
         database.query('INSERT INTO completed_task (ninja_id, task) VALUES (?, ?)', (ninja, task))
         return {"task": task, "ninja": ninja}
+    else:
+        return {"erro": "ninja morto"}
 
 @app.get("/emergency_meeting_start")
 def emergency_meeting_start(type: str, ninja: int):
