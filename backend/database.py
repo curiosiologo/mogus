@@ -4,7 +4,9 @@ database = sqlite3.connect("database.sqlite")
 
 def script(script: str):
     cursor = database.cursor()
-    cursor.execute(query, params)
+    cursor.executescript(script)
+    
+script("PRAGMA foreign_keys = 1;")
 
 def query(query: str, params: tuple[object] = []) -> list[tuple[object]] | None:
     try:
@@ -18,4 +20,4 @@ def query(query: str, params: tuple[object] = []) -> list[tuple[object]] | None:
 def initdb():
     with open('initdb.sql', 'r') as file:
         content = file.read()
-        database.cursor().executescript(content)
+        script(content)
