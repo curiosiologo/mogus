@@ -66,6 +66,12 @@ def log():
 def latest_msg():
     return log()[0]
 
+@app.get("/task_progress")
+def task_progress():
+    completed = int(database.query("SELECT COUNT(1) FROM completed_task")[0][0])
+    TOTAL = 50
+    return (completed / TOTAL) * 100
+    
 @app.get("/info")
 def info():
     return database.query("SELECT * FROM ninja")
