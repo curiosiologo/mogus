@@ -4,6 +4,10 @@ import os
 
 app = FastAPI()
 
+# Este valor muda quando dados sobre os ninjas forem atualizados.
+# Assim, o cliente só atualiza quando for necessário.
+ninja_counter = 0
+
 def createvalues():
     database.query("INSERT INTO ninja VALUES (0, 0, 'Alice', NULL, 0), (1, 0, 'Bob', NULL, 0), (2, 1, 'Charlie', NULL, 1), (3, 0, 'Mateus', 2, 0)")
     database.query("INSERT INTO task VALUES ('fios'), ('cham-cham'), ('copos')")
@@ -74,4 +78,9 @@ def task_progress():
     
 @app.get("/info")
 def info():
-    return database.query("SELECT * FROM ninja")
+    return {
+        "ninjas": database.query("SELECT * FROM ninja"),
+        "ninja_counter": ninja_counter,
+        "task_progress": task_progress(),
+        "emeeting": database.query("SELECT * FROM emeeting")[0]
+    }
