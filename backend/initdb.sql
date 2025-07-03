@@ -27,7 +27,7 @@ VALUES ("dados"),
 	   ("lixo"),
 	   ("labirinto"),
 	   ("reator"),
-	   ("conta")
+	   ("conta");
 
 CREATE TABLE completed_task (
 	ninja_id INTEGER NOT NULL,
@@ -57,4 +57,25 @@ CREATE TABLE emeeting (
 	FOREIGN KEY(reporter) REFERENCES ninja(id)
 );
 
-INSERT INTO emeeting ( active, report ) VALUES ( 0, 0 );
+INSERT INTO emeeting (active, report) VALUES (0, 0);
+
+-- Estado global do reator
+CREATE TABLE reactor (
+	active INTEGER NOT NULL,
+	activator INTEGER,
+	
+	--CHECK (impostor in (0, 1))
+	
+	FOREIGN KEY(activator) REFERENCES ninja(id)
+);
+
+INSERT INTO reactor (active) VALUES (0);
+
+-- Estado global das escadas
+CREATE TABLE stairs (
+	active INTEGER NOT NULL DEFAULT 0,
+	location TEXT NOT NULL PRIMARY KEY
+);
+
+-- TODO: Preencher
+INSERT INTO stairs (location) VALUES ("a"), ("b"), ("c");

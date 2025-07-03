@@ -24,6 +24,8 @@ def registar_impostor(ninja: int):
 
 @app.get("/matar_ninja")
 def matar_ninja(impostor: int, ninja: int):
+    global ninja_counter
+
     if not database.query('SELECT impostor FROM ninja WHERE id=?', (impostor,))[0][0]:
         return {"erro": "não é impostor"}
     if database.query('SELECT cooldown FROM ninja WHERE id=?', (impostor,))[0][0]:
@@ -36,16 +38,21 @@ def matar_ninja(impostor: int, ninja: int):
         return {"erro": "impostor já morto"}
     database.query('UPDATE ninja SET killed_by=? WHERE id=?', (impostor, ninja))
     database.query('UPDATE ninja SET cooldown=1 WHERE id=?', (impostor,))
+    ninja_counter += 1
     return {"impostor": impostor, "ninja": ninja}
 
 @app.get("/completar_task")
 def completar_task(task: str, ninja: int):
+    global ninja_counter
+
     if database.query('SELECT impostor FROM ninja WHERE id=?', (ninja,))[0][0]:
         database.query('UPDATE ninja SET cooldown=0 WHERE id=?', (ninja,))
         print(database.query('SELECT impostor FROM ninja WHERE id=?', (ninja,)))[0][0]
+        ninja_counter += 1
         return {"impostor": ninja}
     elif not database.query('SELECT killed_by FROM ninja WHERE id=?', (ninja,))[0][0]:
         database.query('INSERT INTO completed_task (ninja_id, task) VALUES (?, ?)', (ninja, task))
+        ninja_counter += 1
         return {"task": task, "ninja": ninja}
     else:
         return {"erro": "ninja morto"}
@@ -82,5 +89,6 @@ def info():
         "ninjas": database.query("SELECT * FROM ninja"),
         "ninja_counter": ninja_counter,
         "task_progress": task_progress(),
-        "emeeting": database.query("SELECT * FROM emeeting")[0]
+        "emeeting": database.query("SELECT * FROM emeeting")[0],
+        "reactor": database.query("SELECT * FROM reactor")[0]
     }
