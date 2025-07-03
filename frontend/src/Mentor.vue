@@ -1,6 +1,7 @@
 <script setup lang="js">
   import { ref,onMounted } from "vue";
   import usePolling from './composables/usePolling';
+  import completarTarefa from './main';
   const ninjas=ref([]);
   const emeeting=ref([]);
   const apiCall = async () => {
