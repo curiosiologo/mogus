@@ -15,6 +15,20 @@ CREATE TABLE task (
 	name TEXT PRIMARY KEY NOT NULL
 );
 
+INSERT INTO task (name)
+VALUES ("dados"),
+       ("piramide"),
+	   ("memoria"),
+	   ("tiro-ao-alvo"),
+	   ("wordle"),
+	   ("questao"),
+	   ("cartao"),
+	   ("cham-cham"),
+	   ("lixo"),
+	   ("labirinto"),
+	   ("reator"),
+	   ("conta")
+
 CREATE TABLE completed_task (
 	ninja_id INTEGER NOT NULL,
 	task TEXT NOT NULL,
