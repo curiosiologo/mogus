@@ -84,6 +84,10 @@ def task_progress():
     TOTAL = 50
     return (completed / TOTAL) * 100
     
+@app.get("/tasks")
+def get_tasks():
+    return {"status": "ok", "tasks": database.query("SELECT * FROM tasks")}
+    
 @app.get("/info")
 def info():
     return {
