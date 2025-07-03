@@ -10,7 +10,6 @@ ninja_counter = 0
 
 def createvalues():
     database.query("INSERT INTO ninja VALUES (0, 0, 'Alice', NULL, 0), (1, 0, 'Bob', NULL, 0), (2, 1, 'Charlie', NULL, 1), (3, 0, 'Mateus', 2, 0)")
-    database.query("INSERT INTO task VALUES ('fios'), ('cham-cham'), ('copos')")
     database.query("INSERT INTO log VALUES (0, 'Boas'), (2, 'segunda'), (1, 'primeira')")
     print("creating values")
 
@@ -87,7 +86,7 @@ def set_stairs(stair: str, state: bool):
     return {"status": "ok"}
 
 @app.get("/get_stairs")
-def get_stairs(stair: str, state: bool):
+def get_stairs():
     stairs = database.query("SELECT * FROM stairs")
     return {"status": "ok", "stairs": stairs}
 
@@ -107,6 +106,11 @@ def deactivate_reactor():
     database.query("UPDATE reactor SET active=0, ninja=?", (None,))
     return {"status": "ok"}
 
+@app.get("/reactor_state")
+def reactor_state():
+    state = database.query('SELECT * FROM reactor')
+    return {"status": "ok", "state": state}
+
 @app.get("/latest_msg")
 def latest_msg():
     return {"status": "ok", "log": log()["log"][-1]}
@@ -125,6 +129,7 @@ def info():
     return {
         "status": "ok",
         "ninjas": database.query("SELECT * FROM ninja"),
+        "ninja_tasks": database.query("SELECT COUNT(task) FROM completed_task GROUP BY ninja_id"),
         "ninja_counter": ninja_counter,
         "task_progress": task_progress(),
         "emeeting": database.query("SELECT * FROM emeeting")[0],
