@@ -93,7 +93,7 @@ def get_stairs():
     stairs = database.query("SELECT * FROM stairs")
     return {"status": "ok", "stairs": stairs}
 
-@app.get("/activate_reactor")
+"""@app.get("/activate_reactor")
 def activate_reactor(ninja: int):
     if not database.query('SELECT impostor FROM ninja WHERE id=?', (ninja,))[0][0]:
         return {"status": "Não é impostor"}
@@ -107,7 +107,7 @@ def deactivate_reactor():
     if database.query('SELECT active FROM reactor')[0][0]:
         return {"status": "Reactor já deativado"}
     database.query("UPDATE reactor SET active=0, ninja=?", (None,))
-    return {"status": "ok"}
+    return {"status": "ok"}"""
 
 @app.get("/reactor_state")
 def reactor_state():
@@ -126,7 +126,7 @@ def task_progress():
 @app.get("/tasks")
 def get_tasks():
     return {"status": "ok", "tasks": database.query("SELECT * FROM task")}
-    
+
 def set_meltdown(ninja: int | None = None):
     database.query("UPDATE reactor SET active=?", (1 if activate else 0,))
     if activate:
