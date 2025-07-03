@@ -47,6 +47,10 @@ def matar_ninja(impostor: int, ninja: int):
     ninja_counter += 1
     return {"status": "ok", "impostor": impostor, "ninja": ninja}
 
+@app.get("/ninjas_vivos")
+def ninjas_vivos():
+    return {"status": "ok", "ninjas": database.query("SELECT * FROM ninja WHERE killed_by=NULL")}
+
 @app.get("/completar_task")
 def completar_task(task: str, ninja: int):
     global ninja_counter
