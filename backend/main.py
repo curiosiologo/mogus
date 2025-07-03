@@ -1,14 +1,17 @@
 from fastapi import FastAPI
 import database
 import time
-import asyncio
+import threading
 
 app = FastAPI()
 
 # Este valor muda quando dados sobre os ninjas forem atualizados.
 # Assim, o cliente só atualiza quando for necessário.
 ninja_counter = 0
-reactor_countdown = 30
+
+INITIAL_REACTOR_COUNTDOWN = 30
+reactor_countdown = INITIAL_REACTOR_COUNTDOWN
+meltdown_thread: threading.Thread = None
 
 def createvalues():
     database.query("INSERT INTO ninja VALUES (0, 0, 'Alice', NULL, 0), (1, 0, 'Bob', NULL, 0), (2, 1, 'Charlie', NULL, 1), (3, 0, 'Mateus', 2, 0), (4, 0, 'Wilber', NULL, 0)")
@@ -127,11 +130,16 @@ def task_progress():
 def get_tasks():
     return {"status": "ok", "tasks": database.query("SELECT * FROM task")}
     
+@app.get("/set_meltdown")
 def set_meltdown(ninja: int | None = None):
-    database.query("UPDATE reactor SET active=?", (1 if activate else 0,))
-    if activate:
-        database.query("UPDATE reactor SET activator=?", ninja)
-        asyncio.run(reactor_countdown())
+    global reactor_countdown
+    
+    database.query("UPDATE reactor SET active=?", (1 if ninja != None else 0,))
+    if ninja != None:
+        database.query("UPDATE reactor SET activator=?", (ninja,))
+        meltdown_thread.start()
+    else:
+        reactor_countdown = INITIAL_REACTOR_COUNTDOWN
         
     return {"status": "ok"}
 
@@ -151,12 +159,12 @@ def info():
         "reactor": database.query("SELECT * FROM reactor")[0]
     }
     
-async def reactor_countdown():
+def reactor_countdown_run():
     global reactor_countdown
     
     cancelled = False
     
-    while reactor_countdown < 0:
+    while reactor_countdown >= 0:
         time.sleep(1)
         reactor_countdown -= 1
         
@@ -165,3 +173,5 @@ async def reactor_countdown():
     else:
         # TODO: Os impostores ganham??
         pass
+        
+meltdown_thread = threading.Thread(target=reactor_countdown_run)
