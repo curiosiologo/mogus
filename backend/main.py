@@ -126,7 +126,7 @@ def task_progress():
 @app.get("/tasks")
 def get_tasks():
     return {"status": "ok", "tasks": database.query("SELECT * FROM task")}
-
+    
 def set_meltdown(ninja: int | None = None):
     database.query("UPDATE reactor SET active=?", (1 if activate else 0,))
     if activate:
