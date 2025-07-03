@@ -1,7 +1,8 @@
 <script setup lang="js">
   import Ninja from './components/Ninja.vue';
-  import { ref,onMounted, hydrateOnMediaQuery } from "vue";
+  import { ref,onMounted} from "vue";
   import usePolling from './composables/usePolling';
+  import StarBackground from './components/StarBackground.vue';
   const ninjas=ref([]);
   const emeeting=ref([]);
   const apiCall = async () => {
@@ -15,7 +16,8 @@
 </script>
 
 <template>
-<main class="bg--200 flex flex-row p-4 gap-8 box-shadow">
+<StarBackground />
+<main class="relative z-10 bg--200 flex flex-row p-4 gap-8 box-shadow">
   <div class="w-full">
     <router-link to="/ninja">Ninja view</router-link>
     <h1 class="text-6xl font-semi-bold orbitron text-white">Among Us - Coderdojo 2025</h1>
@@ -36,8 +38,3 @@
 
 </template>
 
-<style>
-body{
-  background-color: rgb(17, 0, 33); 
-}
-</style>
