@@ -8,16 +8,17 @@ app = FastAPI()
 # Este valor muda quando dados sobre os ninjas forem atualizados.
 # Assim, o cliente só atualiza quando for necessário.
 ninja_counter = 0
-TOTAL = database.query("SELECT COUNT(ninja_id) FROM ninja")[0][0] * database.query("SELECT COUNT(name) FROM task")[0][0]
 reactor_countdown = 30
 
 def createvalues():
-    database.query("INSERT INTO ninja VALUES (0, 0, 'Alice', NULL, 0), (1, 0, 'Bob', NULL, 0), (2, 1, 'Charlie', NULL, 1), (3, 0, 'Mateus', 2, 0)")
+    database.query("INSERT INTO ninja VALUES (0, 0, 'Alice', NULL, 0), (1, 0, 'Bob', NULL, 0), (2, 1, 'Charlie', NULL, 1), (3, 0, 'Mateus', 2, 0), (4, 0, 'Wilber', NULL, 0)")
     database.query("INSERT INTO log VALUES (0, 'Boas'), (2, 'segunda'), (1, 'primeira')")
     print("creating values")
 
 if database.created:
     createvalues()
+
+TOTAL = database.query("SELECT COUNT(id) FROM ninja")[0][0] * database.query("SELECT COUNT(name) FROM task")[0][0]
 
 @app.get("/registar_impostor")
 def registar_impostor(ninja: int):
@@ -142,7 +143,7 @@ def info():
     return {
         "status": "ok",
         "ninjas": database.query("SELECT * FROM ninja"),
-        "ninja_tasks": database.query("SELECT COUNT(task) FROM completed_task GROUP BY ninja_id"),
+        "ninja_tasks": database.query("SELECT ninja_id, COUNT(task) FROM completed_task GROUP BY ninja_id"),
         "ninja_counter": ninja_counter,
         "task_progress": task_progress(),
         "emeeting": database.query("SELECT * FROM emeeting")[0],
