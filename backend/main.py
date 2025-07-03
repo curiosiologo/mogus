@@ -8,7 +8,7 @@ app = FastAPI()
 # Este valor muda quando dados sobre os ninjas forem atualizados.
 # Assim, o cliente só atualiza quando for necessário.
 ninja_counter = 0
-
+TOTAL = database.query("SELECT COUNT(ninja_id) FROM ninja")[0][0] * database.query("SELECT COUNT(name) FROM task")[0][0]
 reactor_countdown = 30
 
 def createvalues():
@@ -120,7 +120,6 @@ def latest_msg():
 
 def task_progress():
     completed = int(database.query("SELECT COUNT(1) FROM completed_task")[0][0])
-    TOTAL = 50
     return (completed / TOTAL) * 100
     
 @app.get("/tasks")
