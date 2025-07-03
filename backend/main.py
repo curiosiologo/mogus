@@ -59,10 +59,12 @@ def emergency_meeting_on() -> bool:
     return bool(database.query("SELECT active FROM emeeting")[0][0])
 
 @app.get("/log")
-def log(index: int):
-    log = {"log": []}
-    log = [ i[1] for i in database.query("SELECT * FROM log") ]
-    return log[index:]
+def log():
+    return database.query("SELECT * FROM log ORDER BY id")
+    
+@app.get("/latest_msg")
+def latest_msg():
+    return log()[0]
 
 @app.get("/info")
 def info():
