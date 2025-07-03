@@ -73,7 +73,7 @@ INSERT INTO reactor (active) VALUES (0);
 
 -- Estado global das escadas
 CREATE TABLE stairs (
-	active INTEGER NOT NULL DEFAULT 0,
+	active INTEGER NOT NULL DEFAULT 1,
 	location TEXT NOT NULL PRIMARY KEY
 );
 

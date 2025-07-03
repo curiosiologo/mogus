@@ -74,10 +74,42 @@ def emergency_meeting_on():
 @app.get("/log")
 def log():
     return {"status": "ok", "log": database.query("SELECT * FROM log ORDER BY id")}
-    
+
+@app.get("/create_msg")
+def create_msg(message: str):
+    latest_id = len(log()["log"])
+    database.query("INSERT INTO log VALUES (?, ?)", (latest_id+1, message))
+    return {"status": "ok", "log": (latest_id+1, message)}
+
+@app.get("/set_stairs")
+def set_stairs(stair: str, state: bool):
+    database.query("UPDATE stairs SET active=? WHERE location=?", (1 if state else 0, stair))
+    return {"status": "ok"}
+
+@app.get("/get_stairs")
+def get_stairs(stair: str, state: bool):
+    stairs = database.query("SELECT * FROM stairs")
+    return {"status": "ok", "stairs": stairs}
+
+@app.get("/activate_reactor")
+def activate_reactor(ninja: int):
+    if not database.query('SELECT impostor FROM ninja WHERE id=?', (ninja,))[0][0]:
+        return {"status": "Não é impostor"}
+    if database.query('SELECT active FROM reactor')[0][0]:
+        return {"status": "Reactor já ativado"}
+    database.query("UPDATE reactor SET active=1, ninja=?", (ninja,))
+    return {"status": "ok"}
+
+@app.get("/deactivate_reactor")
+def deactivate_reactor():
+    if database.query('SELECT active FROM reactor')[0][0]:
+        return {"status": "Reactor já deativado"}
+    database.query("UPDATE reactor SET active=0, ninja=?", (None,))
+    return {"status": "ok"}
+
 @app.get("/latest_msg")
 def latest_msg():
-    return {"status": "ok", "log": log()[0]}
+    return {"status": "ok", "log": log()["log"][-1]}
 
 def task_progress():
     completed = int(database.query("SELECT COUNT(1) FROM completed_task")[0][0])
@@ -96,5 +128,6 @@ def info():
         "ninja_counter": ninja_counter,
         "task_progress": task_progress(),
         "emeeting": database.query("SELECT * FROM emeeting")[0],
+        "stairs": get_stairs(),
         "reactor": database.query("SELECT * FROM reactor")[0]
     }
