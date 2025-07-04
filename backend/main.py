@@ -36,6 +36,7 @@ def matar_ninja(impostor: int, ninja: int):
         return {"status": "Não é impostor"}
     if database.query('SELECT cooldown FROM ninja WHERE id=?', (impostor,))[0][0]:
         return {"status": "On cooldown"}
+    print(database.query('SELECT impostor FROM ninja WHERE id=?', (ninja,))[0][0])
     if database.query('SELECT impostor FROM ninja WHERE id=?', (ninja,))[0][0]:
         return {"status": "Impostores não podem matar impostores"}
     if database.query('SELECT killed_by FROM ninja WHERE id=?', (ninja,))[0][0]:
