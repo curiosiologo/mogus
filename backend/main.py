@@ -13,7 +13,16 @@ INITIAL_REACTOR_COUNTDOWN = 30
 reactor_countdown = INITIAL_REACTOR_COUNTDOWN
 meltdown_thread: threading.Thread = None
 
-TOTAL = database.query("SELECT COUNT(id) FROM ninja")[0][0] * database.query("SELECT COUNT(name) FROM task")[0][0]
+def createvalues():
+    database.query("INSERT INTO ninja VALUES (0, 0, 'Alice', NULL, 0), (1, 0, 'Bob', NULL, 0), (2, 1, 'Charlie', NULL, 1), (3, 0, 'Mateus', 2, 0), (4, 0, 'Wilber', NULL, 0)")
+    database.query("INSERT INTO log VALUES (0, 'Boas'), (2, 'segunda'), (1, 'primeira')")
+    print("creating values")
+
+if database.created:
+    createvalues()
+
+TASKLIST = database.query("SELECT name FROM task")
+TOTAL = database.query("SELECT COUNT(id) FROM ninja")[0][0] * len(TASKLIST)
 
 @app.get("/registar_impostor")
 def registar_impostor(ninja: int):
@@ -151,7 +160,7 @@ def info():
     out = {
         "status": "ok",
         "ninjas": database.query("SELECT * FROM ninja"),
-        "ninja_tasks": dict(database.query("SELECT ninja_id, (COUNT(*) / ?) * 100 FROM completed_task GROUP BY ninja_id", (float(TOTAL),))),
+        "ninja_tasks": dict(database.query("SELECT ninja_id, (COUNT(*) / ?) * 100 FROM completed_task GROUP BY ninja_id", (float(len(TASKLIST)),))),
         "ninja_counter": ninja_counter,
         "task_progress": task_progress(),
         "emeeting": database.query("SELECT * FROM emeeting")[0],
