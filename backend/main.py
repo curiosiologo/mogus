@@ -138,6 +138,9 @@ def get_tasks():
 def set_meltdown(ninja: int | None = None):
     global reactor_countdown
     
+    if database.query('SELECT impostor FROM ninja WHERE id=?', (ninja,))[0][0]:
+        return {"status": "Impostores não podem mudar o estado do reator"}
+    
     database.query("UPDATE reactor SET active=?", (1 if ninja != None else 0,))
     if ninja != None:
         database.query("UPDATE reactor SET activator=?", (ninja,))
