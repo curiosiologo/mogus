@@ -7,7 +7,7 @@
   const emeeting=ref([]);
   const global_progress=ref(0);
   const apiCall = async () => {
-    const response = await fetch("http://localhost:8000/info")
+    const response = await fetch(import.meta.env.VITE_API_URL + "/info")
     const data=await response.json ();
     ninjas.value=data.ninjas;
     emeeting.value=data.emeeting;

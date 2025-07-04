@@ -7,13 +7,13 @@
   const selected_ninja=ref(null);
   
   const fetchNinjas= async () => {
-    const response = await fetch("http://localhost:8000/info")
+    const response = await fetch(import.meta.env.VITE_API_URL + "/info")
     const data=await response.json ();
     ninjas.value=data.ninjas.filter((n)=>n[1]==0).filter((n)=>n[3]==null);
     impostors.value=data.ninjas.filter((n)=>n[1]==1).filter((n)=>n[3]==null);
   }
   const reportarmorte= async (ninja, impostor) => {
-    const response = await fetch(`http://localhost:8000/matar_ninja?ninja=${ninja}&impostor=${impostor}`);
+    const response = await fetch(import.meta.env.VITE_API_URL + `/matar_ninja?ninja=${ninja}&impostor=${impostor}`);
 
   }
   
