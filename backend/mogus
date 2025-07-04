@@ -18,4 +18,5 @@ print(url)
 
 req = requests.get(url)
 
-print(f"{req.status_code} {req.json()}")
+print(f"{req.status_code} ", flush=False)
+print(f"{req.json()}")
