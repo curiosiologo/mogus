@@ -166,13 +166,17 @@ def reactor_countdown_run():
     cancelled = False
     
     while reactor_countdown >= 0:
+        if not reactor_state()["state"][0][0]:
+            cancelled = True
+            break
+    
         time.sleep(1)
+        print("countdown: " + str(reactor_countdown))
         reactor_countdown -= 1
         
-    if cancelled:
-        set_meltdown(None)
-    else:
+    if not cancelled:
         # TODO: Os impostores ganham??
+        print("BOOM!!!!!! Impostores ganham, supostamente.")
         pass
         
 meltdown_thread = threading.Thread(target=reactor_countdown_run)
