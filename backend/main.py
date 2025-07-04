@@ -13,14 +13,6 @@ INITIAL_REACTOR_COUNTDOWN = 30
 reactor_countdown = INITIAL_REACTOR_COUNTDOWN
 meltdown_thread: threading.Thread = None
 
-def createvalues():
-    database.query("INSERT INTO ninja VALUES (0, 0, 'Alice', NULL, 0), (1, 0, 'Bob', NULL, 0), (2, 1, 'Charlie', NULL, 1), (3, 0, 'Mateus', 2, 0), (4, 0, 'Wilber', NULL, 0)")
-    database.query("INSERT INTO log VALUES (0, 'Boas'), (2, 'segunda'), (1, 'primeira')")
-    print("creating values")
-
-if database.created:
-    createvalues()
-
 TASKLIST = database.query("SELECT name FROM task")
 TOTAL = database.query("SELECT COUNT(id) FROM ninja")[0][0] * len(TASKLIST)
 
