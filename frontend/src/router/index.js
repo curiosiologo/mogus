@@ -21,6 +21,9 @@ const router=createRouter({
 })
 
 router.beforeEach((to) => {
+    if (to.path == "/info") {
+        return true
+    }
     if (!localStorage["logged_in"] && to.path != "/login") {
         return "/login";
     }
