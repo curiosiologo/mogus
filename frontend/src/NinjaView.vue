@@ -27,7 +27,7 @@
       </div>
     <div class="p-4 grid gap-4 grid-cols-3">
       
-      <div class="animate-[pulse_1s_ease-in-out_3]" v-for="(ninja, index) in ninjas" ><Ninja :name="ninja[2]" :isImpostor="false" :isDead="ninja[3] != null" :onCooldown="false" :idx="index" progress="75%"/></div>
+      <div class="animate-[pulse_1s_ease-in-out_3]" v-for="(ninja, index) in ninjas" ><Ninja :name="ninja[2]" :isImpostor="false" :isDead="ninja[3] != null" :onCooldown="false" :idx="index" progress={{  }}"/></div>
     </div>
     <div class=" flex flex-col absolute z-10 left-1/2 item-center justify-center">
       <div v-if="emeeting[0]==1" class=" -translate-x-1/2 -translate-y-1/2 w-4/5 h-4/5 bg-gradient-to-br from-red-500/10 to-red-700/10  drop-shadow-4xl backdrop-blur-md border border-white/20 transform -skew-x-12 ring-1 ring-inset ring-red-400/40 shadow-3xl ">

@@ -58,7 +58,7 @@
         </div>
         <router-link to="/marcar_morte" class="bitcount-grid-double text-center p-2 bg-gradient-to-br from-red-500/10 to-red-700/10 backdrop-blur-md border border-white/20 transform -skew-x-12 ring-1 ring-inset ring-red-400/40 drop-shadow-4xl text-xl text-white">Reportar morte</router-link>
         <router-link to="/convocar_reuniao" class="bitcount-grid-double text-center p-2 bg-gradient-to-br from-red-500/10 to-red-700/10 backdrop-blur-md border border-white/20 transform -skew-x-12 ring-1 ring-inset ring-red-400/40 drop-shadow-4xl text-xl text-white">Convocar reunião de emergência</router-link>
-        <button v-on:click="Set_Meltdown(selected_ninja, is_death)" class="p-2 bg-gradient-to-br from-red-500/10 to-red-700/10 backdrop-blur-md border border-white/20 transform -skew-x-12 ring-1 ring-inset ring-red-400/40 drop-shadow-4xl text-xl bitcount-grid-double text-white">Convocar</button>
+        <router-link to="/meltdown" class="bitcount-grid-double text-center p-2 bg-gradient-to-br from-red-500/10 to-red-700/10 backdrop-blur-md border border-white/20 transform -skew-x-12 ring-1 ring-inset ring-red-400/40 drop-shadow-4xl text-xl text-white">Ativar Meltdown</router-link>
     </div>
   </div>
 

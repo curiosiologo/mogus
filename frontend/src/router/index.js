@@ -4,12 +4,14 @@ import Home from "../Home.vue"
 import Mentor from "../Mentor.vue"
 import MarcarMorte from "../MarcarMorte.vue"
 import ConvocarReuniao from "../ConvocarReunião.vue"
+import Meltdown from "../Meltdown.vue"
 const routes=[
     {path:"/", component:Home},
     {path:"/ninja", component:NinjaView},
     {path:"/mentor", component:Mentor},
     {path:"/marcar_morte", component:MarcarMorte},
     {path:"/convocar_reuniao", component:ConvocarReuniao},
+    {path:"/meltdown", component:Meltdown},
 ]
 const router=createRouter({
     history: createWebHistory(),
