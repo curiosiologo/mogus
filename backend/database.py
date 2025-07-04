@@ -1,9 +1,6 @@
 import sqlite3
 import os
 
-existe = os.path.isfile("database.sqlite")
-created = False
-
 database = sqlite3.connect(
     "database.sqlite",
     check_same_thread = False) # FIXME: Será que isto causa problemas...??
@@ -29,8 +26,3 @@ def initdb():
     with open('initdb.sql', 'r') as file:
         content = file.read()
         script(content)
-
-if not existe and not created:
-    initdb()
-    created = True
-    print("initdbing")

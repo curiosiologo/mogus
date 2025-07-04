@@ -13,14 +13,6 @@ INITIAL_REACTOR_COUNTDOWN = 30
 reactor_countdown = INITIAL_REACTOR_COUNTDOWN
 meltdown_thread: threading.Thread = None
 
-def createvalues():
-    database.query("INSERT INTO ninja VALUES (0, 0, 'Alice', NULL, 0), (1, 0, 'Bob', NULL, 0), (2, 1, 'Charlie', NULL, 1), (3, 0, 'Mateus', 2, 0), (4, 0, 'Wilber', NULL, 0)")
-    database.query("INSERT INTO log VALUES (0, 'Boas'), (2, 'segunda'), (1, 'primeira')")
-    print("creating values")
-
-if database.created:
-    createvalues()
-
 TOTAL = database.query("SELECT COUNT(id) FROM ninja")[0][0] * database.query("SELECT COUNT(name) FROM task")[0][0]
 
 @app.get("/registar_impostor")
@@ -36,6 +28,7 @@ def matar_ninja(impostor: int, ninja: int):
         return {"status": "Não é impostor"}
     if database.query('SELECT cooldown FROM ninja WHERE id=?', (impostor,))[0][0]:
         return {"status": "On cooldown"}
+    print(database.query('SELECT impostor FROM ninja WHERE id=?', (ninja,))[0][0])
     if database.query('SELECT impostor FROM ninja WHERE id=?', (ninja,))[0][0]:
         return {"status": "Impostores não podem matar impostores"}
     if database.query('SELECT killed_by FROM ninja WHERE id=?', (ninja,))[0][0]:
@@ -57,7 +50,7 @@ def completar_task(task: str, ninja: int):
 
     if database.query('SELECT impostor FROM ninja WHERE id=?', (ninja,))[0][0]:
         database.query('UPDATE ninja SET cooldown=0 WHERE id=?', (ninja,))
-        print(database.query('SELECT impostor FROM ninja WHERE id=?', (ninja,)))[0][0]
+        print(database.query('SELECT impostor FROM ninja WHERE id=?', (ninja,))[0][0])
         ninja_counter += 1
         return {"status": "ok", "impostor": ninja}
     elif not database.query('SELECT killed_by FROM ninja WHERE id=?', (ninja,))[0][0]:
@@ -138,6 +131,9 @@ def get_tasks():
 def set_meltdown(ninja: int | None = None):
     global reactor_countdown
     
+    if ninja != None and not database.query('SELECT impostor FROM ninja WHERE id=?', (ninja,))[0][0]:
+        return {"status": "Crewmates não podem ativar o estado do reator"}
+    
     database.query("UPDATE reactor SET active=?", (1 if ninja != None else 0,))
     if ninja != None:
         database.query("UPDATE reactor SET activator=?", (ninja,))
@@ -152,16 +148,17 @@ def meltdown_on():
 
 @app.get("/info")
 def info():
-    return {
+    out = {
         "status": "ok",
         "ninjas": database.query("SELECT * FROM ninja"),
-        "ninja_tasks": database.query("SELECT ninja_id, COUNT(task) FROM completed_task GROUP BY ninja_id"),
+        "ninja_tasks": dict(database.query("SELECT ninja_id, (COUNT(*) / ?) * 100 FROM completed_task GROUP BY ninja_id", (float(TOTAL),))),
         "ninja_counter": ninja_counter,
         "task_progress": task_progress(),
         "emeeting": database.query("SELECT * FROM emeeting")[0],
         "stairs": get_stairs(),
-        "reactor": database.query("SELECT * FROM reactor")[0]
+        "reactor": database.query("SELECT * FROM reactor")[0],
     }
+    return out
     
 def reactor_countdown_run():
     global reactor_countdown
