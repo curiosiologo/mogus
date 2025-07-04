@@ -15,7 +15,6 @@ const completarTarefa = async (ninja, task) => {
 const gApiCall = async (endpoint = "", args = {}) => {
     let url = apiurl+endpoint+"?";
     for (let key in args) { url += key+"="+args[key]+"&" }
-    url -= "&";
     return await fetch(url);
 } 
 
