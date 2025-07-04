@@ -1,0 +1,21 @@
+#!/usr/bin/env python3
+
+import os
+import sys
+import requests
+
+endpoint = sys.argv[1]
+
+args = sys.argv[2:]
+
+urlargs = "?"
+for arg in args:
+    urlargs += arg + "&"
+
+url = f"http://localhost:8000/{endpoint}{urlargs}"
+
+print(url)
+
+req = requests.get(url)
+
+print(f"{req.status_code} {req.json()}")
