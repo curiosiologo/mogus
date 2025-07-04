@@ -13,7 +13,8 @@ INITIAL_REACTOR_COUNTDOWN = 30
 reactor_countdown = INITIAL_REACTOR_COUNTDOWN
 meltdown_thread: threading.Thread = None
 
-TOTAL = database.query("SELECT COUNT(id) FROM ninja")[0][0] * database.query("SELECT COUNT(name) FROM task")[0][0]
+TASKLIST = database.query("SELECT name FROM task")
+TOTAL = database.query("SELECT COUNT(id) FROM ninja")[0][0] * len(TASKLIST)
 
 @app.get("/registar_impostor")
 def registar_impostor(ninja: int):
@@ -151,7 +152,7 @@ def info():
     out = {
         "status": "ok",
         "ninjas": database.query("SELECT * FROM ninja"),
-        "ninja_tasks": dict(database.query("SELECT ninja_id, (COUNT(*) / ?) * 100 FROM completed_task GROUP BY ninja_id", (float(TOTAL),))),
+        "ninja_tasks": dict(database.query("SELECT ninja_id, (COUNT(*) / ?) * 100 FROM completed_task GROUP BY ninja_id", (float(len(TASKLIST)),))),
         "ninja_counter": ninja_counter,
         "task_progress": task_progress(),
         "emeeting": database.query("SELECT * FROM emeeting")[0],
@@ -166,13 +167,17 @@ def reactor_countdown_run():
     cancelled = False
     
     while reactor_countdown >= 0:
+        if not reactor_state()["state"][0][0]:
+            cancelled = True
+            break
+    
         time.sleep(1)
+        print("countdown: " + str(reactor_countdown))
         reactor_countdown -= 1
         
-    if cancelled:
-        set_meltdown(None)
-    else:
+    if not cancelled:
         # TODO: Os impostores ganham??
+        print("BOOM!!!!!! Impostores ganham, supostamente.")
         pass
         
 meltdown_thread = threading.Thread(target=reactor_countdown_run)
