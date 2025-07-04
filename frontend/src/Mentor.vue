@@ -9,7 +9,7 @@
   const selected_ninja=ref(null);
   const global_progress=ref(0);
   const marcartarefa = async (ninja, tarefa) => {
-    const response = await fetch(`http://localhost:8000/completar_task?ninja=${ninja}&task=${tarefa[0]}`);
+    const response = await fetch(import.meta.env.VITE_API_URL + `/completar_task?ninja=${ninja}&task=${tarefa[0]}`);
     console.log(ninja, tarefa)
   };
   const taskclick=(index)=>{
@@ -20,14 +20,14 @@
     }
   };
   const apiCall = async () => {
-    const response = await fetch("http://localhost:8000/tasks")
+    const response = await fetch(import.meta.env.VITE_API_URL + "/tasks")
     const data=await response.json ();
     emeeting.value=data.emeeting;
     tasks.value=data.tasks;
     global_progress.value=data.task_progress;
   };
   const fetchNinjas= async () => {
-    const response = await fetch("http://localhost:8000/info")
+    const response = await fetch(import.meta.env.VITE_API_URL + "/info")
     const data=await response.json ();
     ninjas.value=data.ninjas.filter((n)=>n[3]==null);
   }

@@ -6,13 +6,13 @@
   const selected_ninja=ref(null);
   const is_death=ref(false);
   const fetchNinjas= async () => {
-    const response = await fetch("http://localhost:8000/info");
+    const response = await fetch(import.meta.env.VITE_API_URL + "/info");
     const data=await response.json ();
     ninjas.value=data.ninjas;
   };
   const emeeting=ref([]);
   const Convocar= async (selected_ninja, is_death) => {
-    const response = await fetch(`http://localhost:8000/emergency_meeting_start?ninja=${selected_ninja}&report=${is_death}`);
+    const response = await fetch(import.meta.env.VITE_API_URL + `/emergency_meeting_start?ninja=${selected_ninja}&report=${is_death}`);
     
   };
   const { start, clear } = usePolling(fetchNinjas, 1000);

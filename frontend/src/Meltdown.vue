@@ -6,13 +6,13 @@
   const selected_ninja=ref(null);
   const is_death=ref(false);
   const fetchNinjas= async () => {
-    const response = await fetch("http://localhost:8000/info");
+    const response = await fetch(import.meta.env.VITE_API_URL + "/info");
     const data=await response.json ();
     ninjas.value=data.ninjas.filter((n)=>n[1]==1).filter((n)=>n[3]==null);
   };
   const emeeting=ref([]);
   const Ativar= async (selected_ninja) => {
-    const response = await fetch(`http://localhost:8000/set_meltdown?ninja=${selected_ninja}`);
+    const response = await fetch(import.meta.env.VITE_API_URL + `/set_meltdown?ninja=${selected_ninja}`);
     
   };
   const { start, clear } = usePolling(fetchNinjas, 1000);
