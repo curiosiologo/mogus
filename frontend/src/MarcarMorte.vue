@@ -26,7 +26,7 @@
   <div class="w-full">
     <h1 class="text-6xl font-semi-bold orbitron text-white">Marcar Morte</h1>
     <div class="flex justify-end">
-        <router-link to="/mentor" class="w-16 space-mono-regular text-center align-middle bg-slate-600 -skew-x-12 backdrop-blur-md drop-shadow-3xl ring-1 ring-inset ring-red-400/40 text-white">Home</router-link>       
+        <router-link to="/mentor" class="w-16 bitcount-grid-double text-center align-middle bg-slate-600 -skew-x-12 backdrop-blur-md drop-shadow-3xl ring-1 ring-inset ring-red-400/40 text-white">Home</router-link>       
     </div> 
     <div class="gap-4 flex flex-col mt-8">
     
