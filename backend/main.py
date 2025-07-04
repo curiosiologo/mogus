@@ -57,7 +57,7 @@ def completar_task(task: str, ninja: int):
 
     if database.query('SELECT impostor FROM ninja WHERE id=?', (ninja,))[0][0]:
         database.query('UPDATE ninja SET cooldown=0 WHERE id=?', (ninja,))
-        print(database.query('SELECT impostor FROM ninja WHERE id=?', (ninja,)))[0][0]
+        print(database.query('SELECT impostor FROM ninja WHERE id=?', (ninja,))[0][0])
         ninja_counter += 1
         return {"status": "ok", "impostor": ninja}
     elif not database.query('SELECT killed_by FROM ninja WHERE id=?', (ninja,))[0][0]:
