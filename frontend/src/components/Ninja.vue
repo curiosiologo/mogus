@@ -16,8 +16,8 @@ defineProps<{
     <img :src="`public/amongus_images/${idx}.gif`" class="w-24 p-1"/>
     <h1 class="bitcount-grid-double p-1">{{ name }} <p v-if="onCooldown"> ⏱️ Cooldown</p></h1>
     <div class="w-full h-full">
-      <div class="orbitron" v-if="show_tasks">{{progress}} Tarefas</div>
-      <div class="h-20" v-if="show_tasks">
+      <div class="orbitron" v-if="show_tasks && !isImpostor">{{progress}} Tarefas</div>
+      <div class="h-20" v-if="show_tasks && !isImpostor" >
         <div class=" bg-blue-700/30 h-full w-30 border border-white/20 ">
           <div class="h-full bg-gradient-to-br from-green-500 to-cyan-500 border border-white/20 ring-1 ring-inset ring-indigo-400/40 backdrop-blur-md inset-0" :style="{width: progress}"></div>
         </div>
